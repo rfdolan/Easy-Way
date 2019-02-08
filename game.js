@@ -49,44 +49,192 @@ Any value returned is ignored.
 */
 
 // UNCOMMENT the following code BLOCK to expose the PS.init() event handler:
-
+var currLev = 0;
 var GAME = {
 
 	BACKGROUND_COLOR: 0xAEAEAE,
-	PLAYER_COLOR: 0x000000
+	PLAYER_COLOR: 0x000000,
+    GOAL_COLOR: 0XBCBCBC,
+    GOAL_BORDER: 0XFFFFFF,
+    WALL_COLOR: 0xE0E0E0,
+
+    // UPDATE these variables to reflect the boundaries of the actual map
+	MAP_BOUNDX: 16,
+	MAP_BOUNDY: 16,
+
+	playerx: 0,
+	playery: 0,
+
+    //level templates
+    mapTemplate:[ //32 X 32
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    ],
+
+    mapTemplate2:[ //16 X 16
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    ],
+
+    //levels
+    map0:[ //introduction   19 X 21 //| 16 mark
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0, // 1 walls
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,-2,0,1,0,0,0,0,0,0, //-2 false goal
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,-1, //-1 real goal
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,//16 mark
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
+
+    ],
+
+    maps: [],
+    gridSize: 0,
+
+    movePlayer : function ( x, y ) //move player
+	{
+
+		let nx = GAME.playerx + x;
+		let ny = GAME.playery + y;
+
+		// If we are trying to move outside, the grid, abort the function
+		if( ( 0 >  nx ) || ( GAME.MAP_BOUNDX <= nx )  || ( 0 > ny ) || ( GAME.MAP_BOUNDY  <= ny ) )
+		{
+			PS.audioPlay("fx_shoot7");
+			return;
+		}
+
+		// Reset the color of the bead the player was just on
+		PS.color( GAME.playerx, GAME.playery, GAME.BACKGROUND_COLOR );
+		// move the player to the desired square
+		PS.color( nx, ny, GAME.PLAYER_COLOR );
+		GAME.playerx = nx;
+		GAME.playery = ny;
+		PS.audioPlay("fx_click"); // Play a happy sound
+	},
+
+    // Set the ps.data values for each level, among other things
+    SetLevelData : function(currLev)
+    {
+
+        let currMap = GAME.maps[currLev];
+
+        // Set the data values of every bead on the grid based on the map for the current level
+        for(let currx = 0; currx < GAME.gridSize; currx+=1)
+        {
+            for(let curry = 0; curry < GAME.gridSize; curry+=1)
+            {
+
+                let currBead = currMap[(curry*GAME.gridSize) + currx];
+                PS.data(currx, curry, currBead);
+            }
+        }
+    },
+
+    //draw map
+    DrawMap : function()
+    {
+        for(let curry = 0; curry <GAME .gridSize; curry+=1)
+        {
+            for(let currx = 0; currx < GAME.gridSize; currx+= 1)
+            {
+                if ((PS.data(currx, curry, PS.CURRENT) === -1) || (PS.data(currx, curry, PS.CURRENT) === -2) ) //if it is a goal
+                {
+                    //make the goal appear
+                    PS.color(currx, curry, GAME.GOAL_COLOR);
+                    PS.borderColor(currx, curry, GAME.GOAL_BORDER);
+                }
+                else if (PS.data(currx, curry, GAME.CURRENT) === 1)
+                {
+                    //make the specific walls appear
+                    PS.color(currx, curry, GAME.WALL_COLOR);
+                    PS.borderColor(currx, curry, GAME.WALL_COLOR);
+                }
+            }
+        }
+    },
 
 }
 
 PS.init = function( system, options ) {
 	"use strict"; // Do not remove this directive!
 
-	// Uncomment the following code line
-	// to verify operation:
-
-	// PS.debug( "PS.init() called\n" );
-
-	// This function should normally begin
-	// with a call to PS.gridSize( x, y )
-	// where x and y are the desired initial
-	// dimensions of the grid.
-	// Call PS.gridSize() FIRST to avoid problems!
-	// The sample call below sets the grid to the
-	// default dimensions (8 x 8).
-	// Uncomment the following code line and change
-	// the x and y parameters as needed.
-
+    //grid color and size
 	PS.gridSize( 16, 16 );
 	PS.gridColor(GAME.BACKGROUND_COLOR);
+	PS.color(PS.ALL, PS.ALL, GAME.BACKGROUND_COLOR);
+	PS.borderColor(PS.ALL, PS.ALL, GAME.BACKGROUND_COLOR);
+	PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
+    PS.gridShadow(true, PS.COLOR_GRAY);
 
-	// This is also a good place to display
-	// your game title or a welcome message
-	// in the status line above the grid.
-	// Uncomment the following code line and
-	// change the string parameter as needed.
+	//game title
+	PS.statusText( "Easy Way" );
 
-	// PS.statusText( "Game" );
+    // Put each map into the array of maps
+    GAME.maps[0] = GAME.map0;
 
-	// Add any other initialization code you need here.
+    //draw map and start on level 0
+    GAME.SetLevelData(currLev);
+    GAME.DrawMap();
+
+
+
 };
 
 
@@ -232,11 +380,37 @@ This function doesn't have to do anything. Any value returned is ignored.
 
 // UNCOMMENT the following code BLOCK to expose the PS.keyDown() event handler:
 
-/*
+
 
 PS.keyDown = function( key, shift, ctrl, options ) {
 	"use strict"; // Do not remove this directive!
+	switch( key ) {
+		case PS.KEY_ARROW_UP:
+		case 87:
+		case 119: {
 
+			GAME.movePlayer(0, -1);
+			break;
+		}
+		case PS.KEY_ARROW_RIGHT:
+		case 68:
+		case 100: {
+			GAME.movePlayer(1, 0);
+			break;
+		}
+		case PS.KEY_ARROW_DOWN:
+		case 83:
+		case 115: {
+			GAME.movePlayer(0, 1);
+			break;
+		}
+		case PS.KEY_ARROW_LEFT:
+		case 65:
+		case 97: {
+			GAME.movePlayer(-1, 0);
+			break;
+		}
+	}
 	// Uncomment the following code line to inspect first three parameters:
 
 	// PS.debug( "PS.keyDown(): key=" + key + ", shift=" + shift + ", ctrl=" + ctrl + "\n" );
@@ -244,7 +418,7 @@ PS.keyDown = function( key, shift, ctrl, options ) {
 	// Add code here for when a key is pressed.
 };
 
-*/
+
 
 /*
 PS.keyUp ( key, shift, ctrl, options )
