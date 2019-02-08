@@ -53,7 +53,41 @@ Any value returned is ignored.
 var GAME = {
 
 	BACKGROUND_COLOR: 0xAEAEAE,
-	PLAYER_COLOR: 0x000000
+	PLAYER_COLOR: 0x000000,
+
+    // UPDATE these variables to reflect the boundaries of the actual map
+	MAP_BOUNDX: 16,
+	MAP_BOUNDY: 16,
+
+	playerx: 0,
+	playery: 0,
+
+	movePlayer : function ( x, y ) //move player
+	{
+
+		let nx = GAME.playerx + x;
+		let ny = GAME.playery + y;
+
+		// If we are trying to move outside, the grid, abort the function
+		if( ( 0 >  nx ) || ( GAME.MAP_BOUNDX <= nx )  || ( 0 > ny ) || ( GAME.MAP_BOUNDY  <= ny ) )
+		{
+			PS.audioPlay("fx_shoot7");
+			return;
+		}
+
+		// Reset the color of the bead the player was just on
+		PS.color( GAME.playerx, GAME.playery, GAME.BACKGROUND_COLOR );
+		// move the player to the desired square
+		PS.color( nx, ny, GAME.PLAYER_COLOR );
+		GAME.playerx = nx;
+		GAME.playery = ny;
+		PS.audioPlay("fx_click"); // Play a happy sound
+	},
+
+
+
+
+
 
 }
 
@@ -77,6 +111,9 @@ PS.init = function( system, options ) {
 
 	PS.gridSize( 16, 16 );
 	PS.gridColor(GAME.BACKGROUND_COLOR);
+	PS.color(PS.ALL, PS.ALL, GAME.BACKGROUND_COLOR);
+	PS.borderColor(PS.ALL, PS.ALL, GAME.BACKGROUND_COLOR);
+	PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
 
 	// This is also a good place to display
 	// your game title or a welcome message
@@ -84,7 +121,7 @@ PS.init = function( system, options ) {
 	// Uncomment the following code line and
 	// change the string parameter as needed.
 
-	// PS.statusText( "Game" );
+	PS.statusText( "Easy Way" );
 
 	// Add any other initialization code you need here.
 };
@@ -232,11 +269,37 @@ This function doesn't have to do anything. Any value returned is ignored.
 
 // UNCOMMENT the following code BLOCK to expose the PS.keyDown() event handler:
 
-/*
+
 
 PS.keyDown = function( key, shift, ctrl, options ) {
 	"use strict"; // Do not remove this directive!
+	switch( key ) {
+		case PS.KEY_ARROW_UP:
+		case 87:
+		case 119: {
 
+			GAME.movePlayer(0, -1);
+			break;
+		}
+		case PS.KEY_ARROW_RIGHT:
+		case 68:
+		case 100: {
+			GAME.movePlayer(1, 0);
+			break;
+		}
+		case PS.KEY_ARROW_DOWN:
+		case 83:
+		case 115: {
+			GAME.movePlayer(0, 1);
+			break;
+		}
+		case PS.KEY_ARROW_LEFT:
+		case 65:
+		case 97: {
+			GAME.movePlayer(-1, 0);
+			break;
+		}
+	}
 	// Uncomment the following code line to inspect first three parameters:
 
 	// PS.debug( "PS.keyDown(): key=" + key + ", shift=" + shift + ", ctrl=" + ctrl + "\n" );
@@ -244,7 +307,7 @@ PS.keyDown = function( key, shift, ctrl, options ) {
 	// Add code here for when a key is pressed.
 };
 
-*/
+
 
 /*
 PS.keyUp ( key, shift, ctrl, options )
