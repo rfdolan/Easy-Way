@@ -59,8 +59,13 @@ var GAME = {
     WALL_COLOR: 0xE0E0E0,
 
     // UPDATE these variables to reflect the boundaries of the actual map
-	MAP_BOUNDX: 16,
-	MAP_BOUNDY: 16,
+	CAMERA_SIZE: 16,
+
+    camera_cursor_x: 0,
+    camera_cursor_y: 0,
+
+    map_size_x: 19,
+    map_size_y: 21,
 
 	playerx: 0,
 	playery: 0,
@@ -145,7 +150,7 @@ var GAME = {
     ],
 
     maps: [],
-    gridSize: 0,
+    gridSize: 16,
 
 
 	movePlayer : function ( x, y ) //move player
@@ -177,12 +182,12 @@ var GAME = {
         let currMap = GAME.maps[currLev];
 
         // Set the data values of every bead on the grid based on the map for the current level
-        for(let currx = 0; currx < GAME.gridSize; currx+=1)
+        for(let curry = GAME.camera_cursor_y; curry < GAME.CAMERA_SIZE; curry+=1)
         {
-            for(let curry = 0; curry < GAME.gridSize; curry+=1)
+            for(let currx = GAME.camera_cursor_x; currx < GAME.CAMERA_SIZE; currx+=1)
             {
 
-                let currBead = currMap[(curry*GAME.gridSize) + currx];
+                let currBead = currMap[(curry*GAME.map_size_y) + currx];
                 PS.data(currx, curry, currBead);
             }
         }
@@ -191,9 +196,9 @@ var GAME = {
     //draw map
     DrawMap : function()
     {
-        for(let curry = 0; curry <GAME .gridSize; curry+=1)
+        for(let curry = 0; curry <GAME.CAMERA_SIZE; curry+=1)
         {
-            for(let currx = 0; currx < GAME.gridSize; currx+= 1)
+            for(let currx = 0; currx < GAME.CAMERA_SIZE; currx+= 1)
             {
                 if ((PS.data(currx, curry, PS.CURRENT) === -1) || (PS.data(currx, curry, PS.CURRENT) === -2) ) //if it is a goal
                 {
@@ -211,7 +216,7 @@ var GAME = {
         }
     },
 
-}
+};
 
 PS.init = function( system, options ) {
 	"use strict"; // Do not remove this directive!
