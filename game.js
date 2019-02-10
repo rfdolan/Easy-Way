@@ -145,9 +145,10 @@ var GAME = {
     ],
 
     maps: [],
-    gridSize: 0,
+    gridSize: 16,
 
-    movePlayer : function ( x, y ) //move player
+
+	movePlayer : function ( x, y ) //move player
 	{
 
 		let nx = GAME.playerx + x;
@@ -229,10 +230,10 @@ PS.init = function( system, options ) {
     // Put each map into the array of maps
     GAME.maps[0] = GAME.map0;
 
+
     //draw map and start on level 0
     GAME.SetLevelData(currLev);
     GAME.DrawMap();
-
 
 
 };
