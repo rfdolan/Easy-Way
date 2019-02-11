@@ -64,8 +64,8 @@ var GAME = {
     camera_cursor_x: 0,
     camera_cursor_y: 0,
 
-    map_size_x: 19,
-    map_size_y: 21,
+    map_size_x: 21,
+    map_size_y: 19,
 
 	playerx: 3,
 	playery: 3,
@@ -160,7 +160,8 @@ var GAME = {
 		let ny = GAME.playery + y;
 
 		// If we are trying to move outside the map, abort the function
-		if( ( 0 >  nx ) || ( GAME.map_size_x <= nx )  || ( 0 > ny ) || ( GAME.map_size_y  <= ny ) )
+		if( ( 0 >  nx ) || ( nx > (GAME.CAMERA_SIZE - 1))  ||
+            ( 0 > ny ) || (ny > (GAME.CAMERA_SIZE - 1)) )
 		{
 			PS.audioPlay("fx_shoot7");
 			return;
@@ -168,7 +169,7 @@ var GAME = {
 
 
 		// Camera control
-        if((nx < 2))
+        if((nx < 2) && (GAME.camera_cursor_x > 0))
         {
             GAME.camera_cursor_x -= 1;
             GAME.SetLevelData(currLev);
@@ -177,7 +178,7 @@ var GAME = {
             return;
         }
 
-        else if(nx > (GAME.CAMERA_SIZE - 2))
+        else if((nx > (GAME.CAMERA_SIZE - 2)) && (GAME.camera_cursor_x < (GAME.map_size_x - GAME.CAMERA_SIZE)))
         {
             GAME.camera_cursor_x += 1;
             GAME.SetLevelData(currLev);
@@ -186,7 +187,7 @@ var GAME = {
             return;
         }
 
-        else if(ny < 2)
+        else if((ny < 2) && (GAME.camera_cursor_y > 0))
         {
             GAME.camera_cursor_y -= 1;
             GAME.SetLevelData(currLev);
@@ -195,7 +196,7 @@ var GAME = {
             return;
         }
 
-        else if(ny > (GAME.CAMERA_SIZE - 2))
+        else if((ny > (GAME.CAMERA_SIZE - 2)) && (GAME.camera_cursor_y < (GAME.map_size_y - GAME.CAMERA_SIZE)))
         {
             GAME.camera_cursor_y += 1;
             GAME.SetLevelData(currLev);
@@ -229,18 +230,18 @@ var GAME = {
         // Set the data values of every bead on the grid based on the map for the current level
         for(let curry = GAME.camera_cursor_y; cameray < GAME.CAMERA_SIZE; curry+=1)
         {
+            camerax = 0;
             for(let currx = GAME.camera_cursor_x; camerax < GAME.CAMERA_SIZE; currx+=1)
             {
 
-                let currBead = currMap[(curry*GAME.map_size_y) + currx];
+                let currBead = currMap[(curry*GAME.map_size_x) + currx];
                 PS.data(camerax, cameray, currBead);
                 camerax += 1;
-                PS.debug("camerax = " + camerax + " cameray = " + cameray + " currBead = " + currBead + " \n");
             }
             cameray += 1;
 
         }
-    },
+   },
 
     //draw map
     DrawMap : function()
@@ -280,7 +281,6 @@ PS.init = function( system, options ) {
 	PS.gridColor(GAME.BACKGROUND_COLOR);
 	PS.color(PS.ALL, PS.ALL, GAME.BACKGROUND_COLOR);
 	PS.borderColor(PS.ALL, PS.ALL, GAME.BACKGROUND_COLOR);
-	PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
     PS.gridShadow(true, PS.COLOR_GRAY);
 
 	//game title
@@ -294,6 +294,7 @@ PS.init = function( system, options ) {
     GAME.SetLevelData(currLev);
     GAME.DrawMap();
 
+    PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
 
 };
 
