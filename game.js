@@ -168,8 +168,6 @@ var GAME = {
 		}
 
 
-<<<<<<< HEAD
-=======
 		// Camera control
         if((nx < 2) && (GAME.camera_cursor_x > 0))
         {
@@ -221,7 +219,6 @@ var GAME = {
         PS.debug("camera cursor_y = " + GAME.camera_cursor_y + "\n");
 	},
 
->>>>>>> ee77aea4cc86eb69f0fc1172f9483c708f1cec3b
     // Set the ps.data values for each level, among other things
     SetLevelData : function(currLev)
     {
@@ -296,14 +293,9 @@ PS.init = function( system, options ) {
     //draw map and start on level 0
     GAME.SetLevelData(currLev);
     GAME.DrawMap();
-<<<<<<< HEAD
 
     PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
 
-=======
-
-
->>>>>>> ee77aea4cc86eb69f0fc1172f9483c708f1cec3b
 };
 
 
