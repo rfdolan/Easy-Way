@@ -52,14 +52,14 @@ Any value returned is ignored.
 var currLev = 0;
 var GAME = {
 
-	BACKGROUND_COLOR: 0xAEAEAE,
-	PLAYER_COLOR: 0x000000,
+    BACKGROUND_COLOR: 0xAEAEAE,
+    PLAYER_COLOR: 0x000000,
     GOAL_COLOR: 0XBCBCBC,
     GOAL_BORDER: 0XFFFFFF,
     WALL_COLOR: 0xE0E0E0,
 
     // UPDATE these variables to reflect the boundaries of the actual map
-	CAMERA_SIZE: 16,
+    CAMERA_SIZE: 16,
 
     camera_cursor_x: 0,
     camera_cursor_y: 0,
@@ -67,8 +67,8 @@ var GAME = {
     map_size_x: 21,
     map_size_y: 19,
 
-	playerx: 3,
-	playery: 3,
+    playerx: 3,
+    playery: 3,
 
     //level templates
     mapTemplate:[ //32 X 32
@@ -126,7 +126,7 @@ var GAME = {
     ],
 
     //levels
-    map0:[ //introduction   21 X 19 //| 16 mark
+    map0:[ //introduction   19 X 21 //| 16 mark
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0, // 1 walls
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
@@ -149,25 +149,45 @@ var GAME = {
 
     ],
 
+    map1:[ //level 1 -- not done yet
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    ],
     maps: [],
     gridSize: 16,
 
 
-	movePlayer : function ( x, y ) //move player
-	{
+    movePlayer : function ( x, y ) //move player
+    {
 
-		let nx = GAME.playerx + x;
-		let ny = GAME.playery + y;
+        let nx = GAME.playerx + x;
+        let ny = GAME.playery + y;
 
-		// If we are trying to move outside the map, abort the function
-		if( ( 0 >  nx ) || ( nx > (GAME.CAMERA_SIZE - 1))  ||
+        // If we are trying to move outside the map, abort the function
+        if( ( 0 >  nx ) || ( nx > (GAME.CAMERA_SIZE - 1))  ||
             ( 0 > ny ) || (ny > (GAME.CAMERA_SIZE - 1)) )
-		{
-			PS.audioPlay("fx_shoot7");
-			return;
-		}
+        {
+            PS.audioPlay("fx_shoot7");
+            return;
+        }
 
-		// Camera control
+
+        // Camera control
         if((nx < 2) && (GAME.camera_cursor_x > 0))
         {
             GAME.camera_cursor_x -= 1;
@@ -203,6 +223,46 @@ var GAME = {
             PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
             return;
         }
+        // If we are trying to move into a wall
+         else if(PS.data(nx, ny, PS.CURRENT) === 1)
+        {
+            PS.audioPlay("fx_shoot7");
+            return;
+        }
+        //check if we are moving into right goal
+        else  if (PS.data(nx, ny, PS.CURRENT) === -1)
+        {
+            PS.audioPlay("fx_ding"); //play triumphant sound
+            currLev += 1; //go to next level
+            GAME.camera_cursor_y = 0;  //reset camera
+            GAME.camera_cursor_x = 0;
+            PS.color(GAME.playerx, GAME.playery, GAME.BACKGROUND_COLOR); //make player disappear
+            GAME.playerx = 3;//reset player position
+            GAME.playery = 3;
+            GAME.SetLevelData(currLev);
+            GAME.DrawMap();
+            PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
+            return;
+        }
+
+        // if the player is moving into wrong goal
+        else if(PS.data(nx, ny, PS.CURRENT) === -2)
+        {
+            PS.audioPlay("fx_ding"); // Play misleading happy sound
+            PS.color( GAME.playerx, GAME.playery, GAME.BACKGROUND_COLOR); // make player disappear
+            //reset camera angle
+            GAME.camera_cursor_y = 0;
+            GAME.camera_cursor_x = 0;
+
+            GAME.playerx = 3;
+            GAME.playery = 3;
+
+            GAME.SetLevelData(currLev);
+            GAME.DrawMap();
+            PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
+
+            return;
+        }
 
         else
         {
@@ -213,10 +273,12 @@ var GAME = {
             GAME.playerx = nx;
             GAME.playery = ny;
         }
-		PS.audioPlay("fx_click"); // Play a happy sound
+
+
+        PS.audioPlay("fx_click"); // Play a happy sound
         PS.debug("camera_cursor_x = " + GAME.camera_cursor_x);
         PS.debug("camera cursor_y = " + GAME.camera_cursor_y + "\n");
-	},
+    },
 
     // Set the ps.data values for each level, among other things
     SetLevelData : function(currLev)
@@ -226,7 +288,6 @@ var GAME = {
 
         let cameray = 0;
         let camerax = 0;
-
         // Set the data values of every bead on the grid based on the map for the current level
         for(let curry = GAME.camera_cursor_y; cameray < GAME.CAMERA_SIZE; curry+=1)
         {
@@ -234,15 +295,14 @@ var GAME = {
             for(let currx = GAME.camera_cursor_x; camerax < GAME.CAMERA_SIZE; currx+=1)
             {
 
-                let currBead = currMap[(curry * GAME.map_size_y) + currx];
-
+                let currBead = currMap[(curry*GAME.map_size_x) + currx];
                 PS.data(camerax, cameray, currBead);
                 camerax += 1;
             }
             cameray += 1;
 
         }
-   },
+    },
 
     //draw map
     DrawMap : function()
@@ -275,21 +335,21 @@ var GAME = {
 };
 
 PS.init = function( system, options ) {
-	"use strict"; // Do not remove this directive!
+    "use strict"; // Do not remove this directive!
 
     //grid color and size
-	PS.gridSize( 16, 16 );
-	PS.gridColor(GAME.BACKGROUND_COLOR);
-	PS.color(PS.ALL, PS.ALL, GAME.BACKGROUND_COLOR);
-	PS.borderColor(PS.ALL, PS.ALL, GAME.BACKGROUND_COLOR);
+    PS.gridSize( 16, 16 );
+    PS.gridColor(GAME.BACKGROUND_COLOR);
+    PS.color(PS.ALL, PS.ALL, GAME.BACKGROUND_COLOR);
+    PS.borderColor(PS.ALL, PS.ALL, GAME.BACKGROUND_COLOR);
     PS.gridShadow(true, PS.COLOR_GRAY);
 
-	//game title
-	PS.statusText( "Easy Way" );
+    //game title
+    PS.statusText( "Easy Way" );
 
     // Put each map into the array of maps
     GAME.maps[0] = GAME.map0;
-
+    GAME.maps[1] = GAME.map1;
 
     //draw map and start on level 0
     GAME.SetLevelData(currLev);
@@ -316,15 +376,15 @@ This function doesn't have to do anything. Any value returned is ignored.
 /*
 
 PS.touch = function( x, y, data, options ) {
-	"use strict"; // Do not remove this directive!
+   "use strict"; // Do not remove this directive!
 
-	// Uncomment the following code line
-	// to inspect x/y parameters:
+   // Uncomment the following code line
+   // to inspect x/y parameters:
 
-	// PS.debug( "PS.touch() @ " + x + ", " + y + "\n" );
+   // PS.debug( "PS.touch() @ " + x + ", " + y + "\n" );
 
-	// Add code here for mouse clicks/touches
-	// over a bead.
+   // Add code here for mouse clicks/touches
+   // over a bead.
 };
 
 */
@@ -344,13 +404,13 @@ This function doesn't have to do anything. Any value returned is ignored.
 /*
 
 PS.release = function( x, y, data, options ) {
-	"use strict"; // Do not remove this directive!
+   "use strict"; // Do not remove this directive!
 
-	// Uncomment the following code line to inspect x/y parameters:
+   // Uncomment the following code line to inspect x/y parameters:
 
-	// PS.debug( "PS.release() @ " + x + ", " + y + "\n" );
+   // PS.debug( "PS.release() @ " + x + ", " + y + "\n" );
 
-	// Add code here for when the mouse button/touch is released over a bead.
+   // Add code here for when the mouse button/touch is released over a bead.
 };
 
 */
@@ -370,13 +430,13 @@ This function doesn't have to do anything. Any value returned is ignored.
 /*
 
 PS.enter = function( x, y, data, options ) {
-	"use strict"; // Do not remove this directive!
+   "use strict"; // Do not remove this directive!
 
-	// Uncomment the following code line to inspect x/y parameters:
+   // Uncomment the following code line to inspect x/y parameters:
 
-	// PS.debug( "PS.enter() @ " + x + ", " + y + "\n" );
+   // PS.debug( "PS.enter() @ " + x + ", " + y + "\n" );
 
-	// Add code here for when the mouse cursor/touch enters a bead.
+   // Add code here for when the mouse cursor/touch enters a bead.
 };
 
 */
@@ -396,13 +456,13 @@ This function doesn't have to do anything. Any value returned is ignored.
 /*
 
 PS.exit = function( x, y, data, options ) {
-	"use strict"; // Do not remove this directive!
+   "use strict"; // Do not remove this directive!
 
-	// Uncomment the following code line to inspect x/y parameters:
+   // Uncomment the following code line to inspect x/y parameters:
 
-	// PS.debug( "PS.exit() @ " + x + ", " + y + "\n" );
+   // PS.debug( "PS.exit() @ " + x + ", " + y + "\n" );
 
-	// Add code here for when the mouse cursor/touch exits a bead.
+   // Add code here for when the mouse cursor/touch exits a bead.
 };
 
 */
@@ -419,13 +479,13 @@ This function doesn't have to do anything. Any value returned is ignored.
 /*
 
 PS.exitGrid = function( options ) {
-	"use strict"; // Do not remove this directive!
+   "use strict"; // Do not remove this directive!
 
-	// Uncomment the following code line to verify operation:
+   // Uncomment the following code line to verify operation:
 
-	// PS.debug( "PS.exitGrid() called\n" );
+   // PS.debug( "PS.exitGrid() called\n" );
 
-	// Add code here for when the mouse cursor/touch moves off the grid.
+   // Add code here for when the mouse cursor/touch moves off the grid.
 };
 
 */
@@ -445,39 +505,39 @@ This function doesn't have to do anything. Any value returned is ignored.
 
 
 PS.keyDown = function( key, shift, ctrl, options ) {
-	"use strict"; // Do not remove this directive!
-	switch( key ) {
-		case PS.KEY_ARROW_UP:
-		case 87:
-		case 119: {
+    "use strict"; // Do not remove this directive!
+    switch( key ) {
+        case PS.KEY_ARROW_UP:
+        case 87:
+        case 119: {
 
-			GAME.movePlayer(0, -1);
-			break;
-		}
-		case PS.KEY_ARROW_RIGHT:
-		case 68:
-		case 100: {
-			GAME.movePlayer(1, 0);
-			break;
-		}
-		case PS.KEY_ARROW_DOWN:
-		case 83:
-		case 115: {
-			GAME.movePlayer(0, 1);
-			break;
-		}
-		case PS.KEY_ARROW_LEFT:
-		case 65:
-		case 97: {
-			GAME.movePlayer(-1, 0);
-			break;
-		}
-	}
-	// Uncomment the following code line to inspect first three parameters:
+            GAME.movePlayer(0, -1);
+            break;
+        }
+        case PS.KEY_ARROW_RIGHT:
+        case 68:
+        case 100: {
+            GAME.movePlayer(1, 0);
+            break;
+        }
+        case PS.KEY_ARROW_DOWN:
+        case 83:
+        case 115: {
+            GAME.movePlayer(0, 1);
+            break;
+        }
+        case PS.KEY_ARROW_LEFT:
+        case 65:
+        case 97: {
+            GAME.movePlayer(-1, 0);
+            break;
+        }
+    }
+    // Uncomment the following code line to inspect first three parameters:
 
-	// PS.debug( "PS.keyDown(): key=" + key + ", shift=" + shift + ", ctrl=" + ctrl + "\n" );
+    // PS.debug( "PS.keyDown(): key=" + key + ", shift=" + shift + ", ctrl=" + ctrl + "\n" );
 
-	// Add code here for when a key is pressed.
+    // Add code here for when a key is pressed.
 };
 
 
@@ -497,13 +557,13 @@ This function doesn't have to do anything. Any value returned is ignored.
 /*
 
 PS.keyUp = function( key, shift, ctrl, options ) {
-	"use strict"; // Do not remove this directive!
+   "use strict"; // Do not remove this directive!
 
-	// Uncomment the following code line to inspect first three parameters:
+   // Uncomment the following code line to inspect first three parameters:
 
-	// PS.debug( "PS.keyUp(): key=" + key + ", shift=" + shift + ", ctrl=" + ctrl + "\n" );
+   // PS.debug( "PS.keyUp(): key=" + key + ", shift=" + shift + ", ctrl=" + ctrl + "\n" );
 
-	// Add code here for when a key is released.
+   // Add code here for when a key is released.
 };
 
 */
@@ -522,17 +582,17 @@ NOTE: Currently, only mouse wheel events are reported, and only when the mouse c
 /*
 
 PS.input = function( sensors, options ) {
-	"use strict"; // Do not remove this directive!
+   "use strict"; // Do not remove this directive!
 
-	// Uncomment the following code lines to inspect first parameter:
+   // Uncomment the following code lines to inspect first parameter:
 
-//	 var device = sensors.wheel; // check for scroll wheel
+//  var device = sensors.wheel; // check for scroll wheel
 //
-//	 if ( device ) {
-//	   PS.debug( "PS.input(): " + device + "\n" );
-//	 }
+//  if ( device ) {
+//    PS.debug( "PS.input(): " + device + "\n" );
+//  }
 
-	// Add code here for when an input event is detected.
+   // Add code here for when an input event is detected.
 };
 
 */
@@ -550,13 +610,13 @@ NOTE: This event is generally needed only by applications utilizing networked te
 /*
 
 PS.shutdown = function( options ) {
-	"use strict"; // Do not remove this directive!
+   "use strict"; // Do not remove this directive!
 
-	// Uncomment the following code line to verify operation:
+   // Uncomment the following code line to verify operation:
 
-	// PS.debug( "“Dave. My mind is going. I can feel it.”\n" );
+   // PS.debug( "“Dave. My mind is going. I can feel it.”\n" );
 
-	// Add code here to tidy up when Perlenspiel is about to close.
+   // Add code here to tidy up when Perlenspiel is about to close.
 };
 
 */
