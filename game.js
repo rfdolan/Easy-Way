@@ -67,8 +67,8 @@ var GAME = {
     map_size_x: 19,
     map_size_y: 21,
 
-	playerx: 0,
-	playery: 0,
+	playerx: 3,
+	playery: 3,
 
     //level templates
     mapTemplate:[ //32 X 32
@@ -159,20 +159,63 @@ var GAME = {
 		let nx = GAME.playerx + x;
 		let ny = GAME.playery + y;
 
-		// If we are trying to move outside, the grid, abort the function
-		if( ( 0 >  nx ) || ( GAME.MAP_BOUNDX <= nx )  || ( 0 > ny ) || ( GAME.MAP_BOUNDY  <= ny ) )
+		// If we are trying to move outside the map, abort the function
+		if( ( 0 >  nx ) || ( GAME.map_size_x <= nx )  || ( 0 > ny ) || ( GAME.map_size_y  <= ny ) )
 		{
 			PS.audioPlay("fx_shoot7");
 			return;
 		}
 
-		// Reset the color of the bead the player was just on
-		PS.color( GAME.playerx, GAME.playery, GAME.BACKGROUND_COLOR );
-		// move the player to the desired square
-		PS.color( nx, ny, GAME.PLAYER_COLOR );
-		GAME.playerx = nx;
-		GAME.playery = ny;
+
+		// Camera control
+        if((nx < 2))
+        {
+            GAME.camera_cursor_x -= 1;
+            GAME.SetLevelData(currLev);
+            GAME.DrawMap();
+            PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
+            return;
+        }
+
+        else if(nx > (GAME.CAMERA_SIZE - 2))
+        {
+            GAME.camera_cursor_x += 1;
+            GAME.SetLevelData(currLev);
+            GAME.DrawMap();
+            PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
+            return;
+        }
+
+        else if(ny < 2)
+        {
+            GAME.camera_cursor_y -= 1;
+            GAME.SetLevelData(currLev);
+            GAME.DrawMap();
+            PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
+            return;
+        }
+
+        else if(ny > (GAME.CAMERA_SIZE - 2))
+        {
+            GAME.camera_cursor_y += 1;
+            GAME.SetLevelData(currLev);
+            GAME.DrawMap();
+            PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
+            return;
+        }
+
+        else
+        {
+            // Reset the color of the bead the player was just on
+            PS.color(GAME.playerx, GAME.playery, GAME.BACKGROUND_COLOR);
+            // move the player to the desired square
+            PS.color(nx, ny, GAME.PLAYER_COLOR);
+            GAME.playerx = nx;
+            GAME.playery = ny;
+        }
 		PS.audioPlay("fx_click"); // Play a happy sound
+        PS.debug("camera_cursor_x = " + GAME.camera_cursor_x);
+        PS.debug("camera cursor_y = " + GAME.camera_cursor_y + "\n");
 	},
 
     // Set the ps.data values for each level, among other things
@@ -181,15 +224,21 @@ var GAME = {
 
         let currMap = GAME.maps[currLev];
 
+        let cameray = 0;
+        let camerax = 0;
         // Set the data values of every bead on the grid based on the map for the current level
-        for(let curry = GAME.camera_cursor_y; curry < GAME.CAMERA_SIZE; curry+=1)
+        for(let curry = GAME.camera_cursor_y; cameray < GAME.CAMERA_SIZE; curry+=1)
         {
-            for(let currx = GAME.camera_cursor_x; currx < GAME.CAMERA_SIZE; currx+=1)
+            for(let currx = GAME.camera_cursor_x; camerax < GAME.CAMERA_SIZE; currx+=1)
             {
 
                 let currBead = currMap[(curry*GAME.map_size_y) + currx];
-                PS.data(currx, curry, currBead);
+                PS.data(camerax, cameray, currBead);
+                camerax += 1;
+                PS.debug("camerax = " + camerax + " cameray = " + cameray + " currBead = " + currBead + " \n");
             }
+            cameray += 1;
+
         }
     },
 
@@ -206,11 +255,16 @@ var GAME = {
                     PS.color(currx, curry, GAME.GOAL_COLOR);
                     PS.borderColor(currx, curry, GAME.GOAL_BORDER);
                 }
-                else if (PS.data(currx, curry, GAME.CURRENT) === 1)
+                else if (PS.data(currx, curry, PS.CURRENT) === 1)
                 {
                     //make the specific walls appear
                     PS.color(currx, curry, GAME.WALL_COLOR);
                     PS.borderColor(currx, curry, GAME.WALL_COLOR);
+                }
+                else if(PS.data(currx, curry, PS.CURRENT) === 0)
+                {
+                    PS.color(currx, curry, GAME.BACKGROUND_COLOR);
+                    PS.borderColor(currx, curry, GAME.BACKGROUND_COLOR);
                 }
             }
         }
