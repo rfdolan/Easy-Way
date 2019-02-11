@@ -187,44 +187,8 @@ var GAME = {
         }
 
 
-        // Camera control
-        if((nx < 2) && (GAME.camera_cursor_x > 0))
-        {
-            GAME.camera_cursor_x -= 1;
-            GAME.SetLevelData(currLev);
-            GAME.DrawMap();
-            PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
-            return;
-        }
-
-        else if((nx > (GAME.CAMERA_SIZE - 2)) && (GAME.camera_cursor_x < (GAME.map_size_x - GAME.CAMERA_SIZE)))
-        {
-            GAME.camera_cursor_x += 1;
-            GAME.SetLevelData(currLev);
-            GAME.DrawMap();
-            PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
-            return;
-        }
-
-        else if((ny < 2) && (GAME.camera_cursor_y > 0))
-        {
-            GAME.camera_cursor_y -= 1;
-            GAME.SetLevelData(currLev);
-            GAME.DrawMap();
-            PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
-            return;
-        }
-
-        else if((ny > (GAME.CAMERA_SIZE - 2)) && (GAME.camera_cursor_y < (GAME.map_size_y - GAME.CAMERA_SIZE)))
-        {
-            GAME.camera_cursor_y += 1;
-            GAME.SetLevelData(currLev);
-            GAME.DrawMap();
-            PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
-            return;
-        }
         // If we are trying to move into a wall
-         else if(PS.data(nx, ny, PS.CURRENT) === 1)
+        else if(PS.data(nx, ny, PS.CURRENT) === 1)
         {
             PS.audioPlay("fx_shoot7");
             return;
@@ -264,6 +228,42 @@ var GAME = {
             return;
         }
 
+        // Camera control
+        if((nx < 2) && (GAME.camera_cursor_x > 0))
+        {
+            GAME.camera_cursor_x -= 1;
+            GAME.SetLevelData(currLev);
+            GAME.DrawMap();
+            PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
+            return;
+        }
+
+        else if((nx > (GAME.CAMERA_SIZE - 2)) && (GAME.camera_cursor_x < (GAME.map_size_x - GAME.CAMERA_SIZE)))
+        {
+            GAME.camera_cursor_x += 1;
+            GAME.SetLevelData(currLev);
+            GAME.DrawMap();
+            PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
+            return;
+        }
+
+        else if((ny < 2) && (GAME.camera_cursor_y > 0))
+        {
+            GAME.camera_cursor_y -= 1;
+            GAME.SetLevelData(currLev);
+            GAME.DrawMap();
+            PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
+            return;
+        }
+
+        else if((ny > (GAME.CAMERA_SIZE - 2)) && (GAME.camera_cursor_y < (GAME.map_size_y - GAME.CAMERA_SIZE)))
+        {
+            GAME.camera_cursor_y += 1;
+            GAME.SetLevelData(currLev);
+            GAME.DrawMap();
+            PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
+            return;
+        }
         else
         {
             // Reset the color of the bead the player was just on
@@ -286,6 +286,11 @@ var GAME = {
 
         let currMap = GAME.maps[currLev];
 
+        if(currLev == 1)
+        {
+            GAME.map_size_x = 16;
+            GAME.map_size_y = 16;
+        }
         let cameray = 0;
         let camerax = 0;
         // Set the data values of every bead on the grid based on the map for the current level
