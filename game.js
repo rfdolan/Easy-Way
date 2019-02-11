@@ -64,8 +64,8 @@ var GAME = {
     camera_cursor_x: 0,
     camera_cursor_y: 0,
 
-    map_size_x: 19,
-    map_size_y: 21,
+    map_size_x: 21,
+    map_size_y: 19,
 
 	playerx: 3,
 	playery: 3,
@@ -126,7 +126,7 @@ var GAME = {
     ],
 
     //levels
-    map0:[ //introduction   19 X 21 //| 16 mark
+    map0:[ //introduction   21 X 19 //| 16 mark
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0, // 1 walls
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
@@ -166,9 +166,6 @@ var GAME = {
 			return;
 		}
 
-
-<<<<<<< HEAD
-=======
 		// Camera control
         if((nx < 2))
         {
@@ -220,7 +217,6 @@ var GAME = {
         PS.debug("camera cursor_y = " + GAME.camera_cursor_y + "\n");
 	},
 
->>>>>>> ee77aea4cc86eb69f0fc1172f9483c708f1cec3b
     // Set the ps.data values for each level, among other things
     SetLevelData : function(currLev)
     {
@@ -229,13 +225,14 @@ var GAME = {
 
         let cameray = 0;
         let camerax = 0;
+
         // Set the data values of every bead on the grid based on the map for the current level
         for(let curry = GAME.camera_cursor_y; cameray < GAME.CAMERA_SIZE; curry+=1)
         {
             for(let currx = GAME.camera_cursor_x; camerax < GAME.CAMERA_SIZE; currx+=1)
             {
 
-                let currBead = currMap[(curry*GAME.map_size_y) + currx];
+                let currBead = currMap[(curry * GAME.map_size_y) + currx];
                 PS.data(camerax, cameray, currBead);
                 camerax += 1;
                 PS.debug("camerax = " + camerax + " cameray = " + cameray + " currBead = " + currBead + " \n");
@@ -296,13 +293,7 @@ PS.init = function( system, options ) {
     //draw map and start on level 0
     GAME.SetLevelData(currLev);
     GAME.DrawMap();
-<<<<<<< HEAD
 
-
-=======
-
-
->>>>>>> ee77aea4cc86eb69f0fc1172f9483c708f1cec3b
 };
 
 
