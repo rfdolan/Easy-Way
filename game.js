@@ -276,8 +276,8 @@ var GAME = {
 
 
         PS.audioPlay("fx_click"); // Play a happy sound
-        PS.debug("camera_cursor_x = " + GAME.camera_cursor_x);
-        PS.debug("camera cursor_y = " + GAME.camera_cursor_y + "\n");
+        //PS.debug("camera_cursor_x = " + GAME.camera_cursor_x);
+        //PS.debug("camera cursor_y = " + GAME.camera_cursor_y + "\n");
     },
 
     // Set the ps.data values for each level, among other things
