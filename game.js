@@ -274,7 +274,7 @@ var GAME = {
             return;
         }
 
-        else if((nx > (GAME.CAMERA_SIZE - 2)) && (GAME.camera_cursor_x < (GAME.map_size_x - GAME.CAMERA_SIZE)))
+        else if((nx > (GAME.CAMERA_SIZE - 3)) && (GAME.camera_cursor_x < (GAME.map_size_x - GAME.CAMERA_SIZE)))
         {
             GAME.camera_cursor_x += 1;
             GAME.SetLevelData(currLev);
@@ -283,7 +283,7 @@ var GAME = {
             return;
         }
 
-        else if((ny < 2) && (GAME.camera_cursor_y > 0))
+        else if((ny < 3) && (GAME.camera_cursor_y > 0))
         {
             GAME.camera_cursor_y -= 1;
             GAME.SetLevelData(currLev);
@@ -292,7 +292,7 @@ var GAME = {
             return;
         }
 
-        else if((ny > (GAME.CAMERA_SIZE - 2)) && (GAME.camera_cursor_y < (GAME.map_size_y - GAME.CAMERA_SIZE)))
+        else if((ny > (GAME.CAMERA_SIZE - 3)) && (GAME.camera_cursor_y < (GAME.map_size_y - GAME.CAMERA_SIZE)))
         {
             GAME.camera_cursor_y += 1;
             GAME.SetLevelData(currLev);
