@@ -323,7 +323,7 @@ var GAME = {
         // if the player is moving into wrong goal
         else if(PS.data(nx, ny, PS.CURRENT) === -2)
         {
-            PS.audioPlay("fx_ding"); // Play misleading happy sound
+            //PS.audioPlay("fx_ding"); // Play misleading happy sound
             PS.color( GAME.playerx, GAME.playery, GAME.BACKGROUND_COLOR); // make player disappear
             //reset camera angle
             GAME.camera_cursor_y = 0;
@@ -695,6 +695,22 @@ PS.keyDown = function( key, shift, ctrl, options ) {
             GAME.movePlayer(-1, 0);
             break;
         }
+        case 32:
+            PS.color( GAME.playerx, GAME.playery, GAME.BACKGROUND_COLOR); // make player disappear
+            PS.scale(GAME.playerx, GAME.playery, PS.DEFAULT);
+            //reset camera angle
+            GAME.camera_cursor_y = 0;
+            GAME.camera_cursor_x = 0;
+
+            GAME.playerx = 3;
+            GAME.playery = 3;
+
+            GAME.playerScale = 50;
+            GAME.canBreak = false;
+            GAME.SetLevelData(currLev);
+            GAME.DrawMap();
+            PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
+            PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
     }
     // Uncomment the following code line to inspect first three parameters:
 
