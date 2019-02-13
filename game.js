@@ -57,7 +57,6 @@ var GAME = {
     GOAL_COLOR: 0XBCBCBC,
     GOAL_BORDER: 0XFFFFFF,
     WALL_COLOR: 0xE0E0E0,
-
     // UPDATE these variables to reflect the boundaries of the actual map
     CAMERA_SIZE: 16,
 
@@ -66,6 +65,9 @@ var GAME = {
 
     map_size_x: 16,
     map_size_y: 16,
+
+    canBreak: false,
+    playerScale: 50,
 
     playerx: 3,
     playery: 3,
@@ -130,13 +132,13 @@ var GAME = {
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,-1,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -244,7 +246,21 @@ var GAME = {
         // If we are trying to move into a wall
         else if(PS.data(nx, ny, PS.CURRENT) === 1)
         {
-            PS.audioPlay("fx_shoot7");
+            if(GAME.canBreak)
+            {
+                PS.data(nx, ny, 0);
+                PS.color(nx, ny, GAME.BACKGROUND_COLOR);
+                PS.borderColor(nx, ny, GAME.BACKGROUND_COLOR);
+                GAME.playerScale = 50;
+                GAME.canBreak = false;
+                PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
+
+                PS.audioPlay("fx_blast2");
+            }
+            else
+            {
+                PS.audioPlay("fx_shoot7");
+            }
             return;
         }
         //check if we are moving into right goal
@@ -255,11 +271,17 @@ var GAME = {
             GAME.camera_cursor_y = 0;  //reset camera
             GAME.camera_cursor_x = 0;
             PS.color(GAME.playerx, GAME.playery, GAME.BACKGROUND_COLOR); //make player disappear
+            PS.scale(GAME.playerx, GAME.playery, PS.DEFAULT);
             GAME.playerx = 3;//reset player position
             GAME.playery = 3;
+
+            GAME.playerScale = 50;
+            GAME.canBreak = false;
+
             GAME.SetLevelData(currLev);
             GAME.DrawMap();
             PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
+            PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
             return;
         }
 
@@ -275,11 +297,27 @@ var GAME = {
             GAME.playerx = 3;
             GAME.playery = 3;
 
+            GAME.playerScale = 50;
+            GAME.canBreak = false;
             GAME.SetLevelData(currLev);
             GAME.DrawMap();
             PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
+            PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
 
             return;
+        }
+
+        // if the player is moving into the powerup
+        else if(PS.data(nx, ny, PS.CURRENT) === 2)
+        {
+            PS.audioPlay("fx_powerup6");
+            GAME.playerScale = 100;
+            GAME.canBreak = true;
+            PS.radius(nx, ny, PS.DEFAULT);
+
+            PS.data(nx, ny, 0);
+
+
         }
 
         // Camera control
@@ -289,6 +327,7 @@ var GAME = {
             GAME.SetLevelData(currLev);
             GAME.DrawMap();
             PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
+            PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
             return;
         }
 
@@ -298,6 +337,7 @@ var GAME = {
             GAME.SetLevelData(currLev);
             GAME.DrawMap();
             PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
+            PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
             return;
         }
 
@@ -307,6 +347,7 @@ var GAME = {
             GAME.SetLevelData(currLev);
             GAME.DrawMap();
             PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
+            PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
             return;
         }
 
@@ -316,14 +357,17 @@ var GAME = {
             GAME.SetLevelData(currLev);
             GAME.DrawMap();
             PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
+            PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
             return;
         }
         else
         {
             // Reset the color of the bead the player was just on
             PS.color(GAME.playerx, GAME.playery, GAME.BACKGROUND_COLOR);
+            PS.scale(GAME.playerx, GAME.playery, PS.DEFAULT);
             // move the player to the desired square
             PS.color(nx, ny, GAME.PLAYER_COLOR);
+            PS.scale(nx, ny, GAME.playerScale);
             GAME.playerx = nx;
             GAME.playery = ny;
         }
@@ -397,6 +441,12 @@ var GAME = {
                     PS.color(currx, curry, GAME.BACKGROUND_COLOR);
                     PS.borderColor(currx, curry, GAME.BACKGROUND_COLOR);
                 }
+                else if(PS.data(currx, curry, PS.CURRENT) === 2)
+                {
+                    PS.color(currx, curry, GAME.PLAYER_COLOR);
+                    PS.radius(currx, curry, 50);
+                    PS.scale(currx, curry, 50);
+                }
             }
         }
     },
@@ -427,6 +477,7 @@ PS.init = function( system, options ) {
     GAME.DrawMap();
 
     PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
+    PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
 
 };
 
