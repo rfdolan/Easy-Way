@@ -54,7 +54,7 @@ var GAME = {
 
     BACKGROUND_COLOR: 0xAEAEAE,
     PLAYER_COLOR: 0x000000,
-    GOAL_COLOR: 0XBCBCBC,
+    GOAL_COLOR: 0X8E8E8E,
     GOAL_BORDER: 0XFFFFFF,
     WALL_COLOR: 0xE0E0E0,
     // UPDATE these variables to reflect the boundaries of the actual map
@@ -136,7 +136,7 @@ var GAME = {
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,2,0,2,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -240,7 +240,48 @@ var GAME = {
         2,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     ],
 
-    map4:[ //final level
+    //levels
+    map4:[ //introduction   19 X 21 //| 16 mark
+        0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0, // 1 walls
+        0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0, //-2 false goal
+        0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,1,0,0,0,-1,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0, //-1 real goal
+        0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,//16 mark
+        0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,2,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
+    ],
+    map5:[ //16 X 17
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,2,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,
+        0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,1,1,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,-1,
+    ],
+
+    map6:[ //final level
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -345,12 +386,19 @@ var GAME = {
         // if the player is moving into the powerup
         else if(PS.data(nx, ny, PS.CURRENT) === 2)
         {
-            PS.audioPlay("fx_powerup6");
-            GAME.playerScale = 100;
-            GAME.canBreak = true;
-            PS.radius(nx, ny, PS.DEFAULT);
+            if(!GAME.canBreak) {
+                PS.audioPlay("fx_powerup6");
+                GAME.playerScale = 100;
+                GAME.canBreak = true;
+                PS.radius(nx, ny, PS.DEFAULT);
 
-            PS.data(nx, ny, 0);
+                PS.data(nx, ny, 0);
+            }
+            else{
+                PS.audioPlay("fx_uhoh");
+                PS.radius(nx, ny, PS.DEFAULT)
+
+            }
 
 
         }
@@ -363,6 +411,7 @@ var GAME = {
             GAME.DrawMap();
             PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
             PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
+            PS.audioPlay("fx_click"); // Play a happy sound
             return;
         }
 
@@ -373,6 +422,7 @@ var GAME = {
             GAME.DrawMap();
             PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
             PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
+            PS.audioPlay("fx_click"); // Play a happy sound
             return;
         }
 
@@ -383,6 +433,7 @@ var GAME = {
             GAME.DrawMap();
             PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
             PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
+            PS.audioPlay("fx_click"); // Play a happy sound
             return;
         }
 
@@ -393,13 +444,22 @@ var GAME = {
             GAME.DrawMap();
             PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
             PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
+            PS.audioPlay("fx_click"); // Play a happy sound
             return;
         }
         else
         {
-            // Reset the color of the bead the player was just on
-            PS.color(GAME.playerx, GAME.playery, GAME.BACKGROUND_COLOR);
-            PS.scale(GAME.playerx, GAME.playery, PS.DEFAULT);
+            if(PS.data(GAME.playerx, GAME.playery, PS.CURRENT) === 2)
+            {
+                PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
+                PS.scale(GAME.playerx, GAME.playery, 50);
+                PS.radius(GAME.playerx, GAME.playery, 50);
+            }
+            else
+            {// Reset the color of the bead the player was just on
+                PS.color(GAME.playerx, GAME.playery, GAME.BACKGROUND_COLOR);
+                PS.scale(GAME.playerx, GAME.playery, PS.DEFAULT);
+            }
             // move the player to the desired square
             PS.color(nx, ny, GAME.PLAYER_COLOR);
             PS.scale(nx, ny, GAME.playerScale);
@@ -429,12 +489,22 @@ var GAME = {
             GAME.map_size_x = 32;
             GAME.map_size_y = 32;
         }
-        if(currLev === 3)
+        if(currLev === 4)
         {
             GAME.map_size_x = 32;
             GAME.map_size_y = 32;
         }
-        if(currLev == 4)
+        if(currLev == 5)
+        {
+            GAME.map_size_x = 21;
+            GAME.map_size_y = 19;
+        }
+        if(currLev == 3)
+        {
+            GAME.map_size_x = 17;
+            GAME.map_size_y = 16;
+        }
+        if(currLev === 6)
         {
             GAME.map_size_x = 16;
             GAME.map_size_y = 16;
@@ -469,17 +539,24 @@ var GAME = {
                     //make the goal appear
                     PS.color(currx, curry, GAME.GOAL_COLOR);
                     PS.borderColor(currx, curry, GAME.GOAL_BORDER);
+                    PS.border(currx, curry, { top : 3,  left : 3, bottom : 3,right : 3});
+                    PS.radius(currx, curry, PS.DEFAULT);
+                    PS.scale(currx, curry, PS.DEFAULT);
                 }
                 else if (PS.data(currx, curry, PS.CURRENT) === 1)
                 {
                     //make the specific walls appear
                     PS.color(currx, curry, GAME.WALL_COLOR);
                     PS.borderColor(currx, curry, GAME.WALL_COLOR);
+                    PS.radius(currx, curry, PS.DEFAULT);
+                    PS.scale(currx, curry, PS.DEFAULT);
                 }
                 else if(PS.data(currx, curry, PS.CURRENT) === 0)
                 {
                     PS.color(currx, curry, GAME.BACKGROUND_COLOR);
                     PS.borderColor(currx, curry, GAME.BACKGROUND_COLOR);
+                    PS.radius(currx, curry, PS.DEFAULT);
+                    PS.scale(currx, curry, PS.DEFAULT);
                 }
                 else if(PS.data(currx, curry, PS.CURRENT) === 2)
                 {
@@ -510,8 +587,10 @@ PS.init = function( system, options ) {
     GAME.maps[0] = GAME.map0;
     GAME.maps[1] = GAME.map1;
     GAME.maps[2] = GAME.map2;
-    GAME.maps[3] = GAME.map3;
-    GAME.maps[4] = GAME.map4;
+    GAME.maps[3] = GAME.map4;
+    GAME.maps[4] = GAME.map5;
+    GAME.maps[5] = GAME.map3;
+    GAME.maps[6] = GAME.map6;
 
     //draw map and start on level 0
     GAME.SetLevelData(currLev);
