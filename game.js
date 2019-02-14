@@ -57,18 +57,21 @@ var GAME = {
     GOAL_COLOR: 0X8E8E8E,
     GOAL_BORDER: 0XFFFFFF,
     WALL_COLOR: 0xE0E0E0,
-    // UPDATE these variables to reflect the boundaries of the actual map
     CAMERA_SIZE: 16,
 
+    // Cursor for where the camera should display
     camera_cursor_x: 0,
     camera_cursor_y: 0,
 
+    // UPDATE these variables to reflect the boundaries of the actual map
     map_size_x: 16,
     map_size_y: 16,
 
+    // Variables for whether or not the player can break a wall and their size
     canBreak: false,
     playerScale: 50,
 
+    // Player position
     playerx: 3,
     playery: 3,
 
@@ -127,6 +130,7 @@ var GAME = {
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     ],
 
+    //levels
     map0:[ //16 X 16
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -145,7 +149,7 @@ var GAME = {
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     ],
-    //levels
+
     map1:[ //introduction   19 X 21 //| 16 mark
         0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0, // 1 walls
         0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -169,7 +173,7 @@ var GAME = {
     ],
 
     //level templates
-    map2:[ //32 X 32
+    map2:[ //32 X 32                  | 16 Mark
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -205,7 +209,7 @@ var GAME = {
     ],
 
     //level 4
-    map3:[ //32 X 32
+    map3:[ //32 X 32                  | 16 Mark
         0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,1,0,0,-1,0,0,0,0,0,1,0,1,0,1,0,1,0,1,0,0,1,0,0,
         0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0,
@@ -262,7 +266,7 @@ var GAME = {
         0,0,0,0,0,2,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
     ],
-    map5:[ //16 X 17
+    map5:[ //16 X 17                  | 16 Mark
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,2,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,
@@ -281,7 +285,7 @@ var GAME = {
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,-1,
     ],
 
-    map6:[ //final level
+    map6:[ //final level 16 x 16
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -326,17 +330,22 @@ var GAME = {
             if(GAME.canBreak)
             {
                 PS.data(nx, ny, 0);
+                // Update the value in the tracking map to reflect the new state of the board
                 GAME.trackingMaps[currLev][(GAME.map_size_x * (ny + GAME.camera_cursor_y)) + (GAME.camera_cursor_x + nx)] = 0;
+                // Change the color of the bead to the backgorund
                 PS.color(nx, ny, GAME.BACKGROUND_COLOR);
                 PS.borderColor(nx, ny, GAME.BACKGROUND_COLOR);
+                // Shrink the player
                 GAME.playerScale = 50;
                 GAME.canBreak = false;
                 PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
 
+                // Play a destroying sound
                 PS.audioPlay("fx_blast2");
             }
             else
             {
+                // Play a wall hitting sound
                 PS.audioPlay("fx_shoot7");
             }
             return;
@@ -362,27 +371,31 @@ var GAME = {
             PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
             return;
         }
-
+/*
         // if the player is moving into wrong goal
         else if(PS.data(nx, ny, PS.CURRENT) === -2)
         {
             GAME.ResetLevel();
             return;
         }
-
+*/
         // if the player is moving into the powerup
         else if(PS.data(nx, ny, PS.CURRENT) === 2)
         {
+            // As long as we don't have a powerup...
             if(!GAME.canBreak) {
+                // Play the powerup noise  and change the player's size
                 PS.audioPlay("fx_powerup6");
                 GAME.playerScale = 100;
                 GAME.canBreak = true;
                 PS.radius(nx, ny, PS.DEFAULT);
 
+                // Update the tracking map
                 PS.data(nx, ny, 0);
                 GAME.trackingMaps[currLev][(GAME.map_size_x * (ny + GAME.camera_cursor_y)) + (GAME.camera_cursor_x + nx)] = 0;
             }
             else{
+                // You can't eat TWO powerups. Don't change anything
                 PS.audioPlay("fx_uhoh");
                 PS.radius(nx, ny, PS.DEFAULT)
 
@@ -392,6 +405,7 @@ var GAME = {
         }
 
         // Camera control
+        // If we are approaching the edge of the grid and the camera can move, move it
         if((nx < 2) && (GAME.camera_cursor_x > 0))
         {
             GAME.camera_cursor_x -= 1;
@@ -439,6 +453,7 @@ var GAME = {
 
         else
         {
+            // If we are standing on a powerup and it should reappear, make it
             if(PS.data(GAME.playerx, GAME.playery, PS.CURRENT) === 2)
             {
                 PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
@@ -516,9 +531,11 @@ var GAME = {
             cameray += 1;
 
         }
+        // Reset the tracking map to the initial state of the level
         GAME.trackingMaps[currLev] = Array.from(GAME.maps[currLev]);
     },
 
+    // Function to set the level data based on the camera movement
     SetLevelData : function(currLev)
     {
         let currMap = GAME.trackingMaps[currLev];
@@ -530,7 +547,7 @@ var GAME = {
             camerax = 0;
             for(let currx = GAME.camera_cursor_x; camerax < GAME.CAMERA_SIZE; currx+=1)
             {
-
+                // Set the data of the current bead to the right number
                 let currBead = currMap[(curry*GAME.map_size_x) + currx];
                 PS.data(camerax, cameray, currBead);
                 camerax += 1;
@@ -561,27 +578,33 @@ var GAME = {
                     //make the specific walls appear
                     PS.color(currx, curry, GAME.WALL_COLOR);
                     PS.borderColor(currx, curry, GAME.WALL_COLOR);
-                    PS.radius(currx, curry, PS.DEFAULT);
-                    PS.scale(currx, curry, PS.DEFAULT);
-                }
-                else if(PS.data(currx, curry, PS.CURRENT) === 0)
-                {
-                    PS.color(currx, curry, GAME.BACKGROUND_COLOR);
-                    PS.borderColor(currx, curry, GAME.BACKGROUND_COLOR);
+                    PS.border(currx, curry, PS.DEFAULT);
                     PS.radius(currx, curry, PS.DEFAULT);
                     PS.scale(currx, curry, PS.DEFAULT);
                 }
                 else if(PS.data(currx, curry, PS.CURRENT) === 2)
                 {
+                    // Make the powerups
                     PS.color(currx, curry, GAME.PLAYER_COLOR);
                     PS.radius(currx, curry, 50);
+                    PS.border(currx, curry, PS.DEFAULT);
                     PS.scale(currx, curry, 50);
                     PS.borderColor(currx, curry, GAME.BACKGROUND_COLOR);
+                }
+                else if(PS.data(currx, curry, PS.CURRENT) === 0)
+                {
+                    // Color in the background
+                    PS.color(currx, curry, GAME.BACKGROUND_COLOR);
+                    PS.borderColor(currx, curry, GAME.BACKGROUND_COLOR);
+                    PS.radius(currx, curry, PS.DEFAULT);
+                    PS.border(currx, curry, PS.DEFAULT);
+                    PS.scale(currx, curry, PS.DEFAULT);
                 }
             }
         }
     },
 
+    // Function to reset a level to its initial state
     ResetLevel : function()
     {
         PS.color( GAME.playerx, GAME.playery, GAME.BACKGROUND_COLOR); // make player disappear
@@ -590,11 +613,15 @@ var GAME = {
         GAME.camera_cursor_y = 0;
         GAME.camera_cursor_x = 0;
 
+        // Reset the player's position
         GAME.playerx = 3;
         GAME.playery = 3;
 
+        // Reset the player's powerup status
         GAME.playerScale = 50;
         GAME.canBreak = false;
+
+        // Re-initialize the level
         GAME.SetLevelDataInit(currLev);
         GAME.DrawMap();
         PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
@@ -813,6 +840,7 @@ PS.keyDown = function( key, shift, ctrl, options ) {
             GAME.movePlayer(-1, 0);
             break;
         }
+        // When spacebar is pressed, reset the level
         case 32:
             GAME.ResetLevel();
     }
