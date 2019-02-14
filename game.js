@@ -136,7 +136,7 @@ var GAME = {
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,2,0,2,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -301,6 +301,7 @@ var GAME = {
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     ],
     maps: [],
+    trackingMaps: [],
     gridSize: 16,
 
 
@@ -325,6 +326,7 @@ var GAME = {
             if(GAME.canBreak)
             {
                 PS.data(nx, ny, 0);
+                GAME.trackingMaps[currLev][(GAME.map_size_x * (ny + GAME.camera_cursor_y)) + (GAME.camera_cursor_x + nx)] = 0;
                 PS.color(nx, ny, GAME.BACKGROUND_COLOR);
                 PS.borderColor(nx, ny, GAME.BACKGROUND_COLOR);
                 GAME.playerScale = 50;
@@ -354,7 +356,7 @@ var GAME = {
             GAME.playerScale = 50;
             GAME.canBreak = false;
 
-            GAME.SetLevelData(currLev);
+            GAME.SetLevelDataInit(currLev);
             GAME.DrawMap();
             PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
             PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
@@ -364,22 +366,7 @@ var GAME = {
         // if the player is moving into wrong goal
         else if(PS.data(nx, ny, PS.CURRENT) === -2)
         {
-            //PS.audioPlay("fx_ding"); // Play misleading happy sound
-            PS.color( GAME.playerx, GAME.playery, GAME.BACKGROUND_COLOR); // make player disappear
-            //reset camera angle
-            GAME.camera_cursor_y = 0;
-            GAME.camera_cursor_x = 0;
-
-            GAME.playerx = 3;
-            GAME.playery = 3;
-
-            GAME.playerScale = 50;
-            GAME.canBreak = false;
-            GAME.SetLevelData(currLev);
-            GAME.DrawMap();
-            PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
-            PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
-
+            GAME.ResetLevel();
             return;
         }
 
@@ -393,6 +380,7 @@ var GAME = {
                 PS.radius(nx, ny, PS.DEFAULT);
 
                 PS.data(nx, ny, 0);
+                GAME.trackingMaps[currLev][(GAME.map_size_x * (ny + GAME.camera_cursor_y)) + (GAME.camera_cursor_x + nx)] = 0;
             }
             else{
                 PS.audioPlay("fx_uhoh");
@@ -447,6 +435,8 @@ var GAME = {
             PS.audioPlay("fx_click"); // Play a happy sound
             return;
         }
+        // End Camera Controle
+
         else
         {
             if(PS.data(GAME.playerx, GAME.playery, PS.CURRENT) === 2)
@@ -454,6 +444,7 @@ var GAME = {
                 PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
                 PS.scale(GAME.playerx, GAME.playery, 50);
                 PS.radius(GAME.playerx, GAME.playery, 50);
+                PS.borderColor(GAME.playerx, GAME.playery, GAME.BACKGROUND_COLOR);
             }
             else
             {// Reset the color of the bead the player was just on
@@ -474,7 +465,7 @@ var GAME = {
     },
 
     // Set the ps.data values for each level, among other things
-    SetLevelData : function(currLev)
+    SetLevelDataInit : function(currLev)
     {
 
         let currMap = GAME.maps[currLev];
@@ -489,17 +480,17 @@ var GAME = {
             GAME.map_size_x = 32;
             GAME.map_size_y = 32;
         }
-        if(currLev === 4)
+        if(currLev === 5)
         {
             GAME.map_size_x = 32;
             GAME.map_size_y = 32;
         }
-        if(currLev == 5)
+        if(currLev === 3)
         {
             GAME.map_size_x = 21;
             GAME.map_size_y = 19;
         }
-        if(currLev == 3)
+        if(currLev === 4)
         {
             GAME.map_size_x = 17;
             GAME.map_size_y = 16;
@@ -509,6 +500,28 @@ var GAME = {
             GAME.map_size_x = 16;
             GAME.map_size_y = 16;
         }
+        let cameray = 0;
+        let camerax = 0;
+        // Set the data values of every bead on the grid based on the map for the current level
+        for(let curry = GAME.camera_cursor_y; cameray < GAME.CAMERA_SIZE; curry+=1)
+        {
+            camerax = 0;
+            for(let currx = GAME.camera_cursor_x; camerax < GAME.CAMERA_SIZE; currx+=1)
+            {
+
+                let currBead = currMap[(curry*GAME.map_size_x) + currx];
+                PS.data(camerax, cameray, currBead);
+                camerax += 1;
+            }
+            cameray += 1;
+
+        }
+        GAME.trackingMaps[currLev] = Array.from(GAME.maps[currLev]);
+    },
+
+    SetLevelData : function(currLev)
+    {
+        let currMap = GAME.trackingMaps[currLev];
         let cameray = 0;
         let camerax = 0;
         // Set the data values of every bead on the grid based on the map for the current level
@@ -563,11 +576,30 @@ var GAME = {
                     PS.color(currx, curry, GAME.PLAYER_COLOR);
                     PS.radius(currx, curry, 50);
                     PS.scale(currx, curry, 50);
+                    PS.borderColor(currx, curry, GAME.BACKGROUND_COLOR);
                 }
             }
         }
     },
 
+    ResetLevel : function()
+    {
+        PS.color( GAME.playerx, GAME.playery, GAME.BACKGROUND_COLOR); // make player disappear
+        PS.scale(GAME.playerx, GAME.playery, PS.DEFAULT);
+        //reset camera angle
+        GAME.camera_cursor_y = 0;
+        GAME.camera_cursor_x = 0;
+
+        GAME.playerx = 3;
+        GAME.playery = 3;
+
+        GAME.playerScale = 50;
+        GAME.canBreak = false;
+        GAME.SetLevelDataInit(currLev);
+        GAME.DrawMap();
+        PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
+        PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
+    }
 };
 
 PS.init = function( system, options ) {
@@ -581,19 +613,26 @@ PS.init = function( system, options ) {
     PS.gridShadow(true, PS.COLOR_GRAY);
 
     //game title
-    PS.statusText( "Easy Way" );
+    PS.statusText( "Outside The Box" );
 
     // Put each map into the array of maps
     GAME.maps[0] = GAME.map0;
+    GAME.trackingMaps[0] = Array.from(GAME.maps[0]);
     GAME.maps[1] = GAME.map1;
+    GAME.trackingMaps[1] = Array.from(GAME.maps[1]);
     GAME.maps[2] = GAME.map2;
+    GAME.trackingMaps[2] = Array.from(GAME.maps[2]);
     GAME.maps[3] = GAME.map4;
+    GAME.trackingMaps[3] = Array.from(GAME.maps[3]);
     GAME.maps[4] = GAME.map5;
+    GAME.trackingMaps[4] = Array.from(GAME.maps[4]);
     GAME.maps[5] = GAME.map3;
+    GAME.trackingMaps[5] = Array.from(GAME.maps[5]);
     GAME.maps[6] = GAME.map6;
+    GAME.trackingMaps[6] = Array.from(GAME.maps[6]);
 
     //draw map and start on level 0
-    GAME.SetLevelData(currLev);
+    GAME.SetLevelDataInit(currLev);
     GAME.DrawMap();
 
     PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
@@ -775,21 +814,7 @@ PS.keyDown = function( key, shift, ctrl, options ) {
             break;
         }
         case 32:
-            PS.color( GAME.playerx, GAME.playery, GAME.BACKGROUND_COLOR); // make player disappear
-            PS.scale(GAME.playerx, GAME.playery, PS.DEFAULT);
-            //reset camera angle
-            GAME.camera_cursor_y = 0;
-            GAME.camera_cursor_x = 0;
-
-            GAME.playerx = 3;
-            GAME.playery = 3;
-
-            GAME.playerScale = 50;
-            GAME.canBreak = false;
-            GAME.SetLevelData(currLev);
-            GAME.DrawMap();
-            PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
-            PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
+            GAME.ResetLevel();
     }
     // Uncomment the following code line to inspect first three parameters:
 
