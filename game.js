@@ -70,11 +70,15 @@ var GAME = {
     // Variables for whether or not the player can break a wall and their size
     canBreak: false,
     playerScale: 50,
-    playerRound: 100,
+    playerRound: 0,
 
     // Player position
     playerx: 3,
     playery: 3,
+
+    canMove: true,
+
+    timer: "",
 
     //level templates
     mapTemplate:[ //32 X 32
@@ -313,6 +317,10 @@ var GAME = {
     movePlayer : function ( x, y ) //move player
     {
 
+        if(!GAME.canMove)
+        {
+            return;
+        }
         let nx = GAME.playerx + x;
         let ny = GAME.playery + y;
 
@@ -339,7 +347,9 @@ var GAME = {
                 // Shrink the player
                 GAME.playerScale = 50;
                 GAME.canBreak = false;
+                GAME.playerRound = 0;
                 PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
+                PS.radius(GAME.playerx, GAME.playery, GAME.playerRound);
 
                 // Play a destroying sound
                 PS.audioPlay("fx_blast2");
@@ -360,16 +370,25 @@ var GAME = {
             GAME.camera_cursor_x = 0;
             PS.color(GAME.playerx, GAME.playery, GAME.BACKGROUND_COLOR); //make player disappear
             PS.scale(GAME.playerx, GAME.playery, PS.DEFAULT);
+            PS.scale(GAME.playerx, GAME.playery, PS.DEFAULT);
             GAME.playerx = 3;//reset player position
             GAME.playery = 3;
 
             GAME.playerScale = 50;
             GAME.canBreak = false;
+            GAME.playerRound = 0;
 
             GAME.SetLevelDataInit(currLev);
+            PS.fade(PS.ALL, PS.ALL, 30);
+            PS.borderFade(PS.ALL, PS.ALL, 30);
+            GAME.timer = PS.timerStart(60, GAME.tick);
+            GAME.canMove = false;
             GAME.DrawMap();
+//            PS.fade(PS.ALL, PS.ALL, PS.DEFAULT);
             PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
             PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
+            PS.radius(GAME.playerx, GAME.playery, PS.DEFAULT);
+
             return;
         }
 /*
@@ -389,7 +408,8 @@ var GAME = {
                 PS.audioPlay("fx_powerup6");
                 GAME.playerScale = 100;
                 GAME.canBreak = true;
-                PS.radius(nx, ny, PS.DEFAULT);
+                GAME.playerRound = 25;
+                PS.radius(nx, ny, GAME.playerRound);
 
                 // Update the tracking map
                 PS.data(nx, ny, 0);
@@ -397,7 +417,7 @@ var GAME = {
             }
             else{
                 // You can't eat TWO powerups. Don't change anything
-                PS.audioPlay("fx_uhoh");
+                PS.audioPlay("fx_squish");
                 PS.radius(nx, ny, PS.DEFAULT)
 
             }
@@ -414,6 +434,7 @@ var GAME = {
             GAME.DrawMap();
             PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
             PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
+            PS.radius(GAME.playerx, GAME.playery, GAME.playerRound);
             PS.audioPlay("fx_click"); // Play a happy sound
             return;
         }
@@ -425,6 +446,7 @@ var GAME = {
             GAME.DrawMap();
             PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
             PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
+            PS.radius(GAME.playerx, GAME.playery, GAME.playerRound);
             PS.audioPlay("fx_click"); // Play a happy sound
             return;
         }
@@ -436,6 +458,7 @@ var GAME = {
             GAME.DrawMap();
             PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
             PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
+            PS.radius(GAME.playerx, GAME.playery, GAME.playerRound);
             PS.audioPlay("fx_click"); // Play a happy sound
             return;
         }
@@ -447,6 +470,7 @@ var GAME = {
             GAME.DrawMap();
             PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
             PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
+            PS.radius(GAME.playerx, GAME.playery, GAME.playerRound);
             PS.audioPlay("fx_click"); // Play a happy sound
             return;
         }
@@ -466,10 +490,12 @@ var GAME = {
             {// Reset the color of the bead the player was just on
                 PS.color(GAME.playerx, GAME.playery, GAME.BACKGROUND_COLOR);
                 PS.scale(GAME.playerx, GAME.playery, PS.DEFAULT);
+                PS.radius(GAME.playerx, GAME.playery, PS.DEFAULT);
             }
             // move the player to the desired square
             PS.color(nx, ny, GAME.PLAYER_COLOR);
             PS.scale(nx, ny, GAME.playerScale);
+            PS.radius(nx, ny, GAME.playerRound);
             GAME.playerx = nx;
             GAME.playery = ny;
         }
@@ -608,8 +634,13 @@ var GAME = {
     // Function to reset a level to its initial state
     ResetLevel : function()
     {
+        if(GAME.timer != "")
+        {
+            return;
+        }
         PS.color( GAME.playerx, GAME.playery, GAME.BACKGROUND_COLOR); // make player disappear
         PS.scale(GAME.playerx, GAME.playery, PS.DEFAULT);
+        PS.radius(GAME.playerx, GAME.playery, PS.DEFAULT);
         //reset camera angle
         GAME.camera_cursor_y = 0;
         GAME.camera_cursor_x = 0;
@@ -621,12 +652,27 @@ var GAME = {
         // Reset the player's powerup status
         GAME.playerScale = 50;
         GAME.canBreak = false;
+        GAME.playerRound = 0;
 
         // Re-initialize the level
         GAME.SetLevelDataInit(currLev);
+        PS.fade(PS.ALL, PS.ALL, 30);
+        PS.borderFade(PS.ALL, PS.ALL, 30);
+        GAME.timer = PS.timerStart(60, GAME.tick);
+        GAME.canMove = false;
         GAME.DrawMap();
         PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
         PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
+
+    },
+    tick : function()
+    {
+        PS.fade(PS.ALL, PS.ALL, PS.DEFAULT);
+        PS.borderFade(PS.ALL, PS.ALL, PS.DEFAULT);
+        PS.timerStop(GAME.timer);
+        GAME.timer = "";
+        GAME.canMove = true;
+
     }
 };
 
