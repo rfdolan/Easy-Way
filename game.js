@@ -70,6 +70,7 @@ var GAME = {
     // Variables for whether or not the player can break a wall and their size
     canBreak: false,
     playerScale: 50,
+    playerRound: 100,
 
     // Player position
     playerx: 3,
