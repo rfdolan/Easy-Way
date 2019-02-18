@@ -49,7 +49,7 @@ Any value returned is ignored.
 */
 
 // UNCOMMENT the following code BLOCK to expose the PS.init() event handler:
-var currLev = 8;
+var currLev = 0;
 var GAME = {
 
     BACKGROUND_COLOR: 0xAEAEAE,
