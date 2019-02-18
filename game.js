@@ -80,6 +80,8 @@ var GAME = {
 
     timer: "",
 
+    isOver: false,
+
     //level templates
     mapTemplate:[ //32 X 32
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -246,7 +248,7 @@ var GAME = {
         0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
         0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
         0,0,0,0,0,0,0,0,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
-        2,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,2,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     ],
 
     //levels
@@ -327,27 +329,30 @@ var GAME = {
         1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,
         2,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,
         1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-        0,0,0,0,1,0,0,2,2,1,0,0,0,1,0,0,2,
-        ,
+        0,0,0,0,1,0,0,2,2,1,0,0,0,1,0,0,-1,
+
     ],
 
+
     map8:[ //final grid
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+        -1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,-1,
+        -1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,-1,
+        -1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,-1,
+        -1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,-1,
+        -1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,-1,
+        -1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,-1,
+        -1,1,1,1,1,1,1,2,2,2,1,1,1,1,1,1,1,-1,
+        -1,1,1,1,1,1,1,2,0,0,1,1,1,1,1,1,1,-1,
+        -1,1,1,1,1,1,1,2,2,2,1,1,1,1,1,1,1,-1,
+        -1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,-1,
+        -1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,-1,
+        -1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,-1,
+        -1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,-1,
+        -1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,-1,
+        -1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,-1,
+        -1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,-1,
+        -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
     ],
 
     maps: [],
@@ -407,6 +412,12 @@ var GAME = {
         {
             PS.audioPlay("fx_ding"); //play triumphant sound
             currLev += 1; //go to next level
+            if(currLev === 9)
+            {
+                GAME.isOver = true;
+                GAME.end();
+                return;
+            }
             GAME.camera_cursor_y = 0;  //reset camera
             GAME.camera_cursor_x = 0;
             PS.color(GAME.playerx, GAME.playery, GAME.BACKGROUND_COLOR); //make player disappear
@@ -422,7 +433,7 @@ var GAME = {
             GAME.SetLevelDataInit(currLev);
             PS.fade(PS.ALL, PS.ALL, 30);
             PS.borderFade(PS.ALL, PS.ALL, 30);
-            GAME.timer = PS.timerStart(60, GAME.tick);
+            GAME.timer = PS.timerStart(40, GAME.tick);
             GAME.canMove = false;
             GAME.DrawMap();
 //            PS.fade(PS.ALL, PS.ALL, PS.DEFAULT);
@@ -582,16 +593,21 @@ var GAME = {
         {
             GAME.map_size_x = 21;
             GAME.map_size_y = 19;
+            GAME.camera_cursor_x = 1;
         }
         if(currLev === 7)
         {
-            GAME.map_size_x = 16;
+            GAME.map_size_x = 17;
             GAME.map_size_y = 16;
         }
         if(currLev === 8)
         {
-            GAME.map_size_x = 16;
-            GAME.map_size_y = 16;
+            GAME.map_size_x = 18;
+            GAME.map_size_y = 18;
+            GAME.camera_cursor_x = 1;
+            GAME.camera_cursor_y = 1;
+            GAME.playerx = 7;
+            GAME.playery = 7;
         }
         let cameray = 0;
         let camerax = 0;
@@ -638,10 +654,10 @@ var GAME = {
     //draw map
     DrawMap : function()
     {
-        if(currLev === 8){
+       /* if(currLev === 8){
             PS.color(PS.ALL, PS.ALL, PS.COLOR_WHITE);
             PS.border(PS.ALL, PS.ALL, PS.COLOR_WHITE);
-        } else{
+        } else{*/
             for(let curry = 0; curry <GAME.CAMERA_SIZE; curry+=1)
             {
                 for(let currx = 0; currx < GAME.CAMERA_SIZE; currx+= 1)
@@ -684,13 +700,17 @@ var GAME = {
                     }
                 }
             }
-        }
+       // }
     },
 
     // Function to reset a level to its initial state
     ResetLevel : function()
     {
         if(GAME.timer != "")
+        {
+            return;
+        }
+        if(GAME.isOver)
         {
             return;
         }
@@ -714,7 +734,7 @@ var GAME = {
         GAME.SetLevelDataInit(currLev);
         PS.fade(PS.ALL, PS.ALL, 30);
         PS.borderFade(PS.ALL, PS.ALL, 30);
-        GAME.timer = PS.timerStart(60, GAME.tick);
+        GAME.timer = PS.timerStart(40, GAME.tick);
         GAME.canMove = false;
         GAME.DrawMap();
         PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
@@ -728,6 +748,17 @@ var GAME = {
         PS.timerStop(GAME.timer);
         GAME.timer = "";
         GAME.canMove = true;
+
+    },
+    end : function()
+    {
+        PS.fade(PS.ALL, PS.ALL, 60);
+        PS.gridFade(60);
+        GAME.canMove = false;
+        PS.color(PS.ALL, PS.ALL, GAME.BACKGROUND_COLOR);
+        PS.borderColor(PS.ALL, PS.ALL, GAME.BACKGROUND_COLOR);
+        PS.gridColor(GAME.BACKGROUND_COLOR);
+        PS.gridShadow(false);
 
     }
 };
@@ -950,7 +981,10 @@ PS.keyDown = function( key, shift, ctrl, options ) {
         }
         // When spacebar is pressed, reset the level
         case 32:
-            GAME.ResetLevel();
+            if(!GAME.isOver)
+            {
+                GAME.ResetLevel();
+            }
     }
     // Uncomment the following code line to inspect first three parameters:
 
