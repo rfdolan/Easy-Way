@@ -49,7 +49,7 @@ Any value returned is ignored.
 */
 
 // UNCOMMENT the following code BLOCK to expose the PS.init() event handler:
-var currLev = 0;
+var currLev = 8;
 var GAME = {
 
     BACKGROUND_COLOR: 0xAEAEAE,
@@ -308,7 +308,26 @@ var GAME = {
         -1,0,0,0,0,0,0,0,1,0,0,0,1,1,1,1,1,0,0,1,0,
     ],
     map7:[ //final level 16 x 16
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,2,1,0,1,2,1,0,1,0,2,
+        0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,0,
+        0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,0,
+        0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,0,
+        1,1,1,1,0,0,0,0,1,0,1,0,1,0,1,0,0,
+        0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,0,
+        1,1,1,1,1,1,1,1,1,0,1,0,1,0,1,0,0,
+        2,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,
+        1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,
+        1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,
+        2,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,
+        1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,
+        2,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,
+        1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+        0,0,0,0,1,0,0,2,2,1,0,0,0,1,0,0,2,
+        ,
+    ],
+
+    map8:[ //final grid
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -326,6 +345,7 @@ var GAME = {
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     ],
+
     maps: [],
     trackingMaps: [],
     gridSize: 16,
@@ -542,6 +562,11 @@ var GAME = {
             GAME.map_size_x = 16;
             GAME.map_size_y = 16;
         }
+        if(currLev === 8)
+        {
+            GAME.map_size_x = 16;
+            GAME.map_size_y = 16;
+        }
         let cameray = 0;
         let camerax = 0;
         // Set the data values of every bead on the grid based on the map for the current level
@@ -587,45 +612,50 @@ var GAME = {
     //draw map
     DrawMap : function()
     {
-        for(let curry = 0; curry <GAME.CAMERA_SIZE; curry+=1)
-        {
-            for(let currx = 0; currx < GAME.CAMERA_SIZE; currx+= 1)
+        if(currLev === 8){
+            PS.color(PS.ALL, PS.ALL, PS.COLOR_WHITE);
+            PS.border(PS.ALL, PS.ALL, PS.COLOR_WHITE);
+        } else{
+            for(let curry = 0; curry <GAME.CAMERA_SIZE; curry+=1)
             {
-                if ((PS.data(currx, curry, PS.CURRENT) === -1) || (PS.data(currx, curry, PS.CURRENT) === -2) ) //if it is a goal
+                for(let currx = 0; currx < GAME.CAMERA_SIZE; currx+= 1)
                 {
-                    //make the goal appear
-                    PS.color(currx, curry, GAME.GOAL_COLOR);
-                    PS.borderColor(currx, curry, GAME.GOAL_BORDER);
-                    PS.border(currx, curry, { top : 3,  left : 3, bottom : 3,right : 3});
-                    PS.radius(currx, curry, PS.DEFAULT);
-                    PS.scale(currx, curry, PS.DEFAULT);
-                }
-                else if (PS.data(currx, curry, PS.CURRENT) === 1)
-                {
-                    //make the specific walls appear
-                    PS.color(currx, curry, GAME.WALL_COLOR);
-                    PS.borderColor(currx, curry, GAME.WALL_COLOR);
-                    PS.border(currx, curry, PS.DEFAULT);
-                    PS.radius(currx, curry, PS.DEFAULT);
-                    PS.scale(currx, curry, PS.DEFAULT);
-                }
-                else if(PS.data(currx, curry, PS.CURRENT) === 2)
-                {
-                    // Make the powerups
-                    PS.color(currx, curry, GAME.PLAYER_COLOR);
-                    PS.radius(currx, curry, 50);
-                    PS.border(currx, curry, PS.DEFAULT);
-                    PS.scale(currx, curry, 50);
-                    PS.borderColor(currx, curry, GAME.BACKGROUND_COLOR);
-                }
-                else if(PS.data(currx, curry, PS.CURRENT) === 0)
-                {
-                    // Color in the background
-                    PS.color(currx, curry, GAME.BACKGROUND_COLOR);
-                    PS.borderColor(currx, curry, GAME.BACKGROUND_COLOR);
-                    PS.radius(currx, curry, PS.DEFAULT);
-                    PS.border(currx, curry, PS.DEFAULT);
-                    PS.scale(currx, curry, PS.DEFAULT);
+                    if ((PS.data(currx, curry, PS.CURRENT) === -1) || (PS.data(currx, curry, PS.CURRENT) === -2) ) //if it is a goal
+                    {
+                        //make the goal appear
+                        PS.color(currx, curry, GAME.GOAL_COLOR);
+                        PS.borderColor(currx, curry, GAME.GOAL_BORDER);
+                        PS.border(currx, curry, { top : 3,  left : 3, bottom : 3,right : 3});
+                        PS.radius(currx, curry, PS.DEFAULT);
+                        PS.scale(currx, curry, PS.DEFAULT);
+                    }
+                    else if (PS.data(currx, curry, PS.CURRENT) === 1)
+                    {
+                        //make the specific walls appear
+                        PS.color(currx, curry, GAME.WALL_COLOR);
+                        PS.borderColor(currx, curry, GAME.WALL_COLOR);
+                        PS.border(currx, curry, PS.DEFAULT);
+                        PS.radius(currx, curry, PS.DEFAULT);
+                        PS.scale(currx, curry, PS.DEFAULT);
+                    }
+                    else if(PS.data(currx, curry, PS.CURRENT) === 2)
+                    {
+                        // Make the powerups
+                        PS.color(currx, curry, GAME.PLAYER_COLOR);
+                        PS.radius(currx, curry, 50);
+                        PS.border(currx, curry, PS.DEFAULT);
+                        PS.scale(currx, curry, 50);
+                        PS.borderColor(currx, curry, GAME.BACKGROUND_COLOR);
+                    }
+                    else if(PS.data(currx, curry, PS.CURRENT) === 0)
+                    {
+                        // Color in the background
+                        PS.color(currx, curry, GAME.BACKGROUND_COLOR);
+                        PS.borderColor(currx, curry, GAME.BACKGROUND_COLOR);
+                        PS.radius(currx, curry, PS.DEFAULT);
+                        PS.border(currx, curry, PS.DEFAULT);
+                        PS.scale(currx, curry, PS.DEFAULT);
+                    }
                 }
             }
         }
@@ -686,6 +716,9 @@ PS.init = function( system, options ) {
     GAME.trackingMaps[6] = Array.from(GAME.maps[6]);
     GAME.maps[7] = GAME.map7;
     GAME.trackingMaps[7] = Array.from(GAME.maps[7]);
+    GAME.maps[8] = GAME.map8;
+    GAME.trackingMaps[8] = Array.from(GAME.maps[8]);
+
 
     //draw map and start on level 0
     GAME.SetLevelDataInit(currLev);
