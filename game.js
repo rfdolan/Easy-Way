@@ -765,18 +765,22 @@ var GAME = {
     {
       GAME.SONG1 = data.channel;
     },
+
     track2Loader( data )
     {
         GAME.SONG2 = data.channel;
     },
+
     track3Loader( data )
     {
         GAME.SONG3 = data.channel;
     },
+
     track4Loader( data )
     {
         GAME.SONG4 = data.channel;
     },
+
     end : function()
     {
         PS.fade(PS.ALL, PS.ALL, 60);
