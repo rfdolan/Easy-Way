@@ -52,6 +52,10 @@ Any value returned is ignored.
 var currLev = 0;
 var GAME = {
 
+    SONG1: "",
+    SONG2: "",
+    SONG3: "",
+    SONG4: "",
     BACKGROUND_COLOR: 0xAEAEAE,
     PLAYER_COLOR: 0x000000,
     GOAL_COLOR: 0X8E8E8E,
@@ -573,6 +577,8 @@ var GAME = {
         {
             GAME.map_size_x = 32;
             GAME.map_size_y = 32;
+            PS.audioFade(GAME.SONG1, PS.CURRENT, 0.0);
+            PS.audioFade(GAME.SONG2, PS.CURRENT, 1.0)
         }
         if(currLev === 5)
         {
@@ -583,6 +589,8 @@ var GAME = {
         {
             GAME.map_size_x = 21;
             GAME.map_size_y = 19;
+            PS.audioFade(GAME.SONG2, PS.CURRENT, 0.0);
+            PS.audioFade(GAME.SONG3, PS.CURRENT, 1.0)
         }
         if(currLev === 4)
         {
@@ -594,6 +602,8 @@ var GAME = {
             GAME.map_size_x = 21;
             GAME.map_size_y = 19;
             GAME.camera_cursor_x = 1;
+            PS.audioFade(GAME.SONG3, PS.CURRENT, 0.0);
+            PS.audioFade(GAME.SONG4, PS.CURRENT, 1.0)
         }
         if(currLev === 7)
         {
@@ -750,6 +760,23 @@ var GAME = {
         GAME.canMove = true;
 
     },
+
+    track1Loader( data )
+    {
+      GAME.SONG1 = data.channel;
+    },
+    track2Loader( data )
+    {
+        GAME.SONG2 = data.channel;
+    },
+    track3Loader( data )
+    {
+        GAME.SONG3 = data.channel;
+    },
+    track4Loader( data )
+    {
+        GAME.SONG4 = data.channel;
+    },
     end : function()
     {
         PS.fade(PS.ALL, PS.ALL, 60);
@@ -759,6 +786,9 @@ var GAME = {
         PS.borderColor(PS.ALL, PS.ALL, GAME.BACKGROUND_COLOR);
         PS.gridColor(GAME.BACKGROUND_COLOR);
         PS.gridShadow(false);
+
+        PS.audioFade(GAME.SONG4, PS.CURRENT, 0.0);
+        PS.audioFade(GAME.SONG1, PS.CURRENT, 1.0)
 
     }
 };
@@ -803,7 +833,30 @@ PS.init = function( system, options ) {
 
     PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
     PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
-
+    GAME.SONG1 = PS.audioPlay("Outside_the_box1", {
+        fileTypes : ["wav"],
+        path : "Sounds/",
+        loop : 1,
+        onLoad : GAME.track1Loader,
+        volume : 1.0, } );
+    GAME.SONG2 = PS.audioPlay("Outside_the_box2", {
+        fileTypes : ["wav"],
+        path : "Sounds/",
+        loop : 1,
+        onLoad : GAME.track2Loader,
+        volume : 0.0, } );
+    GAME.SONG3 = PS.audioPlay("Outside_the_box3", {
+        fileTypes : ["wav"],
+        path : "Sounds/",
+        loop : 1,
+        onLoad : GAME.track3Loader,
+        volume : 0.0, } );
+    GAME.SONG4 = PS.audioPlay("Outside_the_box4", {
+        fileTypes : ["wav"],
+        path : "Sounds/",
+        loop : 1,
+        onLoad : GAME.track4Loader,
+        volume : 0.0, } );
 };
 
 
