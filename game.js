@@ -49,7 +49,7 @@ Any value returned is ignored.
 */
 
 // UNCOMMENT the following code BLOCK to expose the PS.init() event handler:
-var currLev = 0;
+var currLev = 6;
 var GAME = {
 
     SONG1: "",
@@ -296,7 +296,7 @@ var GAME = {
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,-1,
     ],
 
-    map6:[ //introduction   19 X 21 //| 16 mark
+    map6:[ //19 X 21 //| 16 mark
         0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,2, // 1 walls
         0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -314,8 +314,8 @@ var GAME = {
         0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,//16 mark
         0,0,0,0,0,0,0,0,1,1,1,1,1,0,1,0,1,1,1,1,0,
-        0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,1,0,
-        -1,0,0,0,0,0,0,0,1,0,0,0,1,1,1,1,1,0,0,1,0,
+        1,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,1,0,
+        -1,1,0,0,0,0,0,0,1,0,0,0,1,1,1,1,1,0,0,1,0,
     ],
     map7:[ //final level 16 x 16
         0,0,0,0,0,0,0,2,1,0,1,2,1,0,1,0,2,
@@ -491,7 +491,7 @@ var GAME = {
             PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
             PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
             PS.radius(GAME.playerx, GAME.playery, GAME.playerRound);
-            PS.audioPlay("fx_click"); // Play a happy sound
+            //PS.audioPlay("fx_click"); // Play a happy sound
             return;
         }
 
@@ -503,7 +503,7 @@ var GAME = {
             PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
             PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
             PS.radius(GAME.playerx, GAME.playery, GAME.playerRound);
-            PS.audioPlay("fx_click"); // Play a happy sound
+            //PS.audioPlay("fx_click"); // Play a happy sound
             return;
         }
 
@@ -515,7 +515,7 @@ var GAME = {
             PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
             PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
             PS.radius(GAME.playerx, GAME.playery, GAME.playerRound);
-            PS.audioPlay("fx_click"); // Play a happy sound
+           // PS.audioPlay("fx_click"); // Play a happy sound
             return;
         }
 
@@ -527,7 +527,7 @@ var GAME = {
             PS.color(GAME.playerx, GAME.playery, GAME.PLAYER_COLOR);
             PS.scale(GAME.playerx, GAME.playery, GAME.playerScale);
             PS.radius(GAME.playerx, GAME.playery, GAME.playerRound);
-            PS.audioPlay("fx_click"); // Play a happy sound
+           // PS.audioPlay("fx_click"); // Play a happy sound
             return;
         }
         // End Camera Controle
@@ -557,7 +557,7 @@ var GAME = {
         }
 
 
-        PS.audioPlay("fx_click"); // Play a happy sound
+        //PS.audioPlay("fx_click"); // Play a happy sound
         //PS.debug("camera_cursor_x = " + GAME.camera_cursor_x);
         //PS.debug("camera cursor_y = " + GAME.camera_cursor_y + "\n");
     },
@@ -601,7 +601,7 @@ var GAME = {
         {
             GAME.map_size_x = 21;
             GAME.map_size_y = 19;
-            GAME.camera_cursor_x = 1;
+            GAME.camera_cursor_x = 2;
             PS.audioFade(GAME.SONG3, PS.CURRENT, 0.0);
             PS.audioFade(GAME.SONG4, PS.CURRENT, 1.0)
         }
