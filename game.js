@@ -49,13 +49,14 @@ Any value returned is ignored.
 */
 
 // UNCOMMENT the following code BLOCK to expose the PS.init() event handler:
-var currLev = 6;
+var currLev = 0;
 var GAME = {
 
     SONG1: "",
     SONG2: "",
     SONG3: "",
     SONG4: "",
+    SONGEND: "",
     BACKGROUND_COLOR: 0xAEAEAE,
     PLAYER_COLOR: 0x000000,
     GOAL_COLOR: 0X8E8E8E,
@@ -83,6 +84,7 @@ var GAME = {
     canMove: true,
 
     timer: "",
+    endTime: "",
 
     isOver: false,
 
@@ -781,6 +783,18 @@ var GAME = {
         GAME.SONG4 = data.channel;
     },
 
+    tickEnd : function()
+    {
+
+        PS.timerStop(GAME.endTime);
+        PS.audioPlay("Outside_the_boxend", {
+            fileTypes : ["wav"],
+            path : "Sounds/",
+            loop : 0,
+            volume : 1.0, } );
+
+
+    },
     end : function()
     {
         PS.fade(PS.ALL, PS.ALL, 60);
@@ -790,9 +804,9 @@ var GAME = {
         PS.borderColor(PS.ALL, PS.ALL, GAME.BACKGROUND_COLOR);
         PS.gridColor(GAME.BACKGROUND_COLOR);
         PS.gridShadow(false);
+        GAME.endTime = PS.timerStart(40, GAME.tickEnd);
 
         PS.audioFade(GAME.SONG4, PS.CURRENT, 0.0);
-        PS.audioFade(GAME.SONG1, PS.CURRENT, 1.0)
 
     }
 };
@@ -861,6 +875,7 @@ PS.init = function( system, options ) {
         loop : 1,
         onLoad : GAME.track4Loader,
         volume : 0.0, } );
+
 };
 
 
