@@ -1032,8 +1032,8 @@ PS.keyDown = function( key, shift, ctrl, options ) {
             GAME.movePlayer(-1, 0);
             break;
         }
-        // When spacebar is pressed, reset the level
-        case 32:
+        case 13: // Enter
+        case 32: // Space
             if(!GAME.isOver)
             {
                 GAME.ResetLevel();
