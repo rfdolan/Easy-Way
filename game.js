@@ -862,6 +862,8 @@ var GAME = {
             path : "Sounds/",
             loop : 0,
             volume : 1.0, } );
+        PS.statusFade(600);
+        PS.statusColor(PS.DEFAULT)
 
 
     },
@@ -877,6 +879,7 @@ var GAME = {
         GAME.endTime = PS.timerStart(40, GAME.tickEnd);
 
         PS.audioFade(GAME.SONG4, PS.CURRENT, 0.0);
+        PS.statusColor(GAME.BACKGROUND_COLOR);
 
     }
 };
