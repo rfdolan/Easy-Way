@@ -48,7 +48,7 @@ Any value returned is ignored.
 [options : Object] = A JavaScript object with optional data properties; see API documentation for details.
 */
 
-var currLev = 8;
+var currLev = 0;
 var GAME = {
 
     SONG1: "",
